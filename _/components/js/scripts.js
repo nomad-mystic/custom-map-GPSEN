@@ -6,14 +6,13 @@
 	lastMod = 8_10_2015
 ------*/
 
-
+var markers = [];
 $(document).ready(function() {
   /// initialize() google maps
 
     function initialize() {
         $.get('_/php/AJAXJSON.php', function(data) {
             var parsedData = jQuery.parseJSON(data);
-            console.log(parsedData);
             var map = new google.maps.Map(document.getElementById('map-canvas'), {
                 zoom: 8,
                 center: new google.maps.LatLng(45.523375, -122.676201),
@@ -26,9 +25,12 @@ $(document).ready(function() {
             for (i = 0; i < parsedData.length; i++) {
                 marker = new google.maps.Marker({
                     position: new google.maps.LatLng(parsedData[i][2], parsedData[i][3]),
-                    map: map
-                });
+                    map: map,
+                    id: i
 
+                });
+                //marker.set('id', [i][0]);
+                //console.log(marker.id);
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
                         infowindow.setContent(
@@ -52,68 +54,72 @@ $(document).ready(function() {
                         infowindow.open(map, marker);
                     }; // end return function
                 })(marker, i));
-            }
+                markers.push(marker);
+            } // end for
+            //var testButton = $('#0');
+            //google.maps.event.addDomListener(document.getElementById("0"), 'click', function() {
+            //          //map.setCenter(UNNPortlandChapterMarker.getPosition());
+            //        testButton.open(map, 0);
+            //            console.log('this is the click marker');
+            //        }); // end UNNPortlandChapterButton
         }); // end get
-        ////////////////////////////////////////////////////////
-    //    var map = new google.maps.Map(document.getElementById('map-canvas'),
-    //        mapOptions);
-    //
-    //    /////////////////////////////////////////////////////////// for United Nations Portland Chapter
-    //    // THis grabs the LAT and LNG for the marker
-    //  	var UNNPortlandChapterLatLng = new google.maps.LatLng(45.554258, -122.622123);
-    //
-    //  	// THis is the content of the marker
-    //  	var UNNPortlandChapterContent = '<h2>United Nations Association Portland Chapter</h2>'
-    //  		+ '<div class="floatLeft">'
-    //  		+ '<p>We are a nonprofit, nonpartisan organization that supports the work of the'
-    //  		+ '<br>United Nations in the Oregon area and we encourage active civic participation'
-    //  		+ '<br> in the most important social and economic issues facing the world today.</p>'
-    //  		+ '</div>';
-    //
-    //  	// this is giving the UNNPortlandChapterInfoWindow the UNNPortlandChapterContent
-    //  	var UNNPortlandChapterInfoWindow = new google.maps.InfoWindow({
-    //  		content: UNNPortlandChapterContent
-    //  	})// end UNNPortlandChapterIngotWindow
-    //
-    //  	// This creates the Marker
-    //  	var UNNPortlandChapterMarker = new google.maps.Marker({
-    //  		position: UNNPortlandChapterLatLng,
-    //  		map: map,
-    //  		title: 'UNNPortlandChapterMarker',
-    //  		id: 'UNNPortlandChapterMarker'
-    //  	}); // end UNNPortlandChapterMarker
-    //
-    //  	// This add eventListener to UNNPortlandChapterMarker
-    //  	google.maps.event.addListener(UNNPortlandChapterMarker, 'click', function() {
-    //
-		//	 // if(UNNPortlandChapterInfoWindow.open() === true{
-    ////   			UNNPortlandChapterInfoWindow.open(map, UNNPortlandChapterMarker);
-    ////   		} else {
-    ////   			UNNPortlandChapterInfoWindow.close();
-    ////   		}
-    //
-    //      if(UNNPortlandChapterInfoWindow.open() == null) {
-    //        UNNPortlandChapterInfoWindow.open(map, UNNPortlandChapterMarker);
-    //
-    //      } else if(UNNPortlandChapterInfoWindow.open() == true) {
-    //        UNNPortlandChapterInfoWindow.close(map, UNNPortlandChapterMarker);
-    //        console.log('This');
-    //      }
-    //    }); // end UNNPortlandChapter- event
-    //
-    //    google.maps.event.addDomListener(document.getElementById("UNNPortlandChapterButton"), 'click', function() {
-    //      map.setCenter(UNNPortlandChapterMarker.getPosition());
-    //       UNNPortlandChapterInfoWindow.open(map, UNNPortlandChapterMarker);
-    //    }); // end UNNPortlandChapterButton
-    //
-    //
-    //    for(var s=0; s <= 2; s++) {
-    //        //output += '<p>' + parsedData[1][s] + '</p>';
-    //        for(var i=0; i < 5; i++) {
-    //            console.log(parsedData[0][i] + 'This is inside the loop');
-    //            output += '<p>' + parsedData[s][i] + '</p>';
-    //        } // end for
-    //    }
+
     } // end initialize()
 	google.maps.event.addDomListener(window, 'load', initialize);
-}); // end ready 
+    var testButton = $('.testButton');
+    testButton.on('click', function(evnt) {
+        console.log(evnt.currentTarget.dataset);
+        myClick(id);
+    });
+    function myClick(id){
+        google.maps.event.trigger(markers[id], 'click');
+        console.log(marker.id);
+    }
+}); // end ready
+
+//    /////////////////////////////////////////////////////////// for United Nations Portland Chapter
+//    // THis grabs the LAT and LNG for the marker
+//  	// this is giving the UNNPortlandChapterInfoWindow the UNNPortlandChapterContent
+//  	var UNNPortlandChapterInfoWindow = new google.maps.InfoWindow({
+//  		content: UNNPortlandChapterContent
+//  	})// end UNNPortlandChapterIngotWindow
+//
+//  	// This creates the Marker
+//  	var UNNPortlandChapterMarker = new google.maps.Marker({
+//  		position: UNNPortlandChapterLatLng,
+//  		map: map,
+//  		title: 'UNNPortlandChapterMarker',
+//  		id: 'UNNPortlandChapterMarker'
+//  	}); // end UNNPortlandChapterMarker
+//
+//  	// This add eventListener to UNNPortlandChapterMarker
+//  	google.maps.event.addListener(UNNPortlandChapterMarker, 'click', function() {
+//
+//	 // if(UNNPortlandChapterInfoWindow.open() === true{
+////   			UNNPortlandChapterInfoWindow.open(map, UNNPortlandChapterMarker);
+////   		} else {
+////   			UNNPortlandChapterInfoWindow.close();
+////   		}
+//
+//      if(UNNPortlandChapterInfoWindow.open() == null) {
+//        UNNPortlandChapterInfoWindow.open(map, UNNPortlandChapterMarker);
+//
+//      } else if(UNNPortlandChapterInfoWindow.open() == true) {
+//        UNNPortlandChapterInfoWindow.close(map, UNNPortlandChapterMarker);
+//        console.log('This');
+//      }
+//    }); // end UNNPortlandChapter- event
+//
+//    google.maps.event.addDomListener(document.getElementById("UNNPortlandChapterButton"), 'click', function() {
+//      map.setCenter(UNNPortlandChapterMarker.getPosition());
+//       UNNPortlandChapterInfoWindow.open(map, UNNPortlandChapterMarker);
+//    }); // end UNNPortlandChapterButton
+//
+//
+//    for(var s=0; s <= 2; s++) {
+//        //output += '<p>' + parsedData[1][s] + '</p>';
+//        for(var i=0; i < 5; i++) {
+//            console.log(parsedData[0][i] + 'This is inside the loop');
+//            output += '<p>' + parsedData[s][i] + '</p>';
+//        } // end for
+//    }
